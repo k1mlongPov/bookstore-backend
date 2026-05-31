@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  firstName    String
+  lastName     String
+  phone        String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  role         Role[]
+}
+
+model Role {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  deletedAt       DateTime?
+  rolePermissions RolePermission[]
+  user            User?            @relation(fields: [userId], references: [id])
+  userId          String?
+}
+
+model Permission {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  resource        String
+  action          String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           String     @id @default(uuid())
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([roleId, permissionId])
+}
+
+model Author {
+  id         String       @id @default(uuid())
+  firstName  String
+  lastName   String
+  biography  String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
+  bookAuthor BookAuthor[]
+  books      Book[]
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String?
+  parentId    String?
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  books       Book[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+}
+
+model Publisher {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  phone     String?
+  email     String?   @unique
+  address   String?
+  website   String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  book      Book[]
+}
+
+model Supplier {
+  id            String    @id @default(uuid())
+  name          String    @unique
+  contactPerson String?
+  email         String?   @unique
+  phone         String?
+  address       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  book          Book[]
+}
+
+model Book {
+  id              String       @id @default(uuid())
+  isbn            String       @unique
+  barcode         String?      @unique
+  englishTitle    String
+  khmerTitle      String?
+  description     String?
+  sellingPrice    Decimal      @db.Decimal(10, 2)
+  costPrice       Decimal      @db.Decimal(10, 2)
+  coverImageUrl   String?
+  bookImagesUrl   String[]
+  publicationYear Int?
+  language        String?
+  isActive        Boolean      @default(true)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+  category        Category?    @relation(fields: [categoryId], references: [id])
+  categoryId      String?
+  publisher       Publisher?   @relation(fields: [publisherId], references: [id])
+  publisherId     String?
+  supplier        Supplier?    @relation(fields: [supplierId], references: [id])
+  supplierId      String?
+  author          Author?      @relation(fields: [authorId], references: [id])
+  authorId        String?
+  bookAuthor      BookAuthor[]
+}
+
+model BookAuthor {
+  id       String  @id @default(uuid())
+  book     Book?   @relation(fields: [bookId], references: [id])
+  bookId   String?
+  author   Author? @relation(fields: [authorId], references: [id])
+  authorId String?
+
+  @@unique([authorId, bookId])
+}
