@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  username     String    @unique
-  email        String    @unique
-  passwordHash String    @map("password_hash")
+  id           String     @id @default(uuid())
+  username     String     @unique
+  email        String     @unique
+  passwordHash String     @map("password_hash")
   firstName    String
   lastName     String
   phone        String?
-  isActive     Boolean   @default(true)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   deletedAt    DateTime?
-  role         Role[]
+  userRole     UserRole[]
 }
 
 model Role {
@@ -30,8 +30,17 @@ model Role {
   updatedAt       DateTime         @updatedAt
   deletedAt       DateTime?
   rolePermissions RolePermission[]
-  user            User?            @relation(fields: [userId], references: [id])
-  userId          String?
+  userRole        UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
 }
 
 model Permission {

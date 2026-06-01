@@ -62,10 +62,7 @@ export const deleteUserCtrl = async (req: Request, res: Response, next: NextFunc
     try{
         const params = userIdSchema.parse(req.params);
         await UserService.deleteUser(params.id);
-        res.status(200).json({
-            status: "success",
-            message: "User deleted successfully",
-        })
+        res.status(204).json();
     }catch (error) {
         next(error);
     }
