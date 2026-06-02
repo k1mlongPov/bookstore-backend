@@ -1,17 +1,30 @@
-import {NextFunction, Response} from "express";
-import {AppError} from "../utils/app.error";
-import {AuthRequest} from "../modules/auth/auth.types";
-export const authorize = (...allowedRoles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => {
-    const hasRole = req.user?.roles.some(
-        (role: any) => allowedRoles.includes(role)
+import { NextFunction, Response ,Request} from "express";
+import { AppError } from "../utils/app.error";
 
-    );
+export const authorize =
+    (...allowedRoles: string[]) =>
+        (
+            req: Request,
+            res: Response,
+            next: NextFunction
+        ) => {
+            if (!req.user) {
+                throw new AppError(
+                    "Unauthorized",
+                    401
+                );
+            }
 
-    if (!hasRole) {
-        throw new AppError(
-            "Forbidden",
-            403
-        );
-    }
-    next();
-};
+            const hasRole = req.user.roles.some(
+                role =>
+                    allowedRoles.includes(role)
+            );
+
+            if (!hasRole) {
+                throw new AppError(
+                    "Forbidden",
+                    403
+                );
+            }
+            return next();
+        };

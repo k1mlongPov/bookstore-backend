@@ -5,6 +5,7 @@ import {AppError} from "../../utils/app.error";
 import prisma from "../../config/prisma";
 import {PaginationResult} from "../../types/pagination.types";
 import {UserResponse} from "./user.types";
+import {RoleRepository} from "../role/role.repository";
 
 export const UserService = {
     async getAllUsers(page:number, limit: number) :Promise<PaginationResult<UserResponse>> {
@@ -40,16 +41,22 @@ export const UserService = {
         if(existingUsername){
             throw new AppError('Username already exists', 409)
         }
+        const customerRole = await RoleRepository.findByName("CUSTOMER");
+        if (!customerRole) {
+            throw new AppError(
+                "CUSTOMER role not found",
+                500
+            );
+        }
 
-        const passwordHash = await bcrypt.hash(data.password, 10);
+        const passwordHash = await bcrypt.hash(data.passwordHash, 10);
 
         return UserRepository.create({
             username: data.username,
             email: data.email,
-            passwordHash,
+            passwordHash: passwordHash,
             firstName: data.firstName,
             lastName: data.lastName,
-            phone: data.phone,
         })
     },
     async updateUser  (id: string, data: UpdateUserInput) {

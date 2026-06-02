@@ -42,7 +42,6 @@ export const createUserCtrl = async (req: Request, res: Response, next: NextFunc
     }catch (error) {
         next(error);
     }
-
 }
 export const updateUserCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

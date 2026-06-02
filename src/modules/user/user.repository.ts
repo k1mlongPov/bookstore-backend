@@ -25,6 +25,7 @@ export const UserRepository = {
                   isActive: true,
                   createdAt: true,
               },
+
           }
       );
     },
@@ -42,7 +43,9 @@ export const UserRepository = {
             where:{
                 id,
                 deletedAt: null
+
             },
+
             select: {
                 id: true,
                 username: true,
@@ -51,12 +54,18 @@ export const UserRepository = {
                 lastName: true,
                 phone: true,
                 createdAt: true,
+                userRole: {
+                    include: {
+                        role: true
+                    }
+                }
             },
         })
     },
    async create(data: CreateUserRepositoryInput) {
         return prisma.user.create({
             data,
+
             select: {
                 id: true,
                 username: true,

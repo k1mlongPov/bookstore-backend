@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import {NextFunction, Request, Response} from "express";
 import jwt from "jsonwebtoken";
-import { env } from "../config/env";
-import { AppError } from "../utils/app.error";
-import { AuthUser } from "../modules/auth/auth.types";
+import {env} from "../config/env";
+import {AppError} from "../utils/app.error";
+import {AuthUser} from "../modules/auth/auth.types";
 
 export const authMiddleware = (
     req: Request,
@@ -13,7 +13,10 @@ export const authMiddleware = (
         const authHeader =
             req.headers.authorization;
 
-        if (!authHeader) {
+        if (
+            !authHeader ||
+            !authHeader.startsWith("Bearer ")
+        ) {
             throw new AppError(
                 "Unauthorized",
                 401
@@ -23,17 +26,26 @@ export const authMiddleware = (
         const token =
             authHeader.split(" ")[1];
 
-        const payload = jwt.verify(
+        req.user = jwt.verify(
             token,
             env.JWT_SECRET
         ) as AuthUser;
-        (req as Request & {
-            user?: AuthUser;
-        }).user = payload;
 
-        next();
-    } catch {
-        next(
+        return next();
+    } catch (error) {
+        if (
+            error instanceof
+            jwt.TokenExpiredError
+        ) {
+            return next(
+                new AppError(
+                    "Token expired",
+                    401
+                )
+            );
+        }
+
+        return next(
             new AppError(
                 "Invalid token",
                 401

@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {loginSchema} from "./auth.validation";
 import {AuthService} from "./auth.service";
-import {AuthUser} from "./auth.types";
+import {createUserSchema} from "../user/user.validation";
 
 export const loginCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
@@ -19,4 +19,18 @@ export const loginCtrl = async (req: Request, res: Response, next: NextFunction)
 
 export const getCurrentUserCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     res.json(req.user);
+}
+
+export const registerCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try{
+        const body = createUserSchema.parse(req.body);
+        const result = await AuthService.register(body);
+        res.status(201).json({
+            status: 'success',
+            message: 'Registration successful',
+            data: result,
+        })
+    }catch (e) {
+        next(e);
+    }
 }
