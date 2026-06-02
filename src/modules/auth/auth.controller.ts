@@ -17,16 +17,6 @@ export const loginCtrl = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
-export const getCurrentUserCtrl = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
-    const user = (req as Request & {
-        user?: AuthUser;
-    }).user;
-
-    res.json({
-        success: true,
-        data: user
-    });
-};
+export const getCurrentUserCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    res.json(req.user);
+}

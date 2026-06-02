@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import {NextFunction, Response} from "express";
 import {AppError} from "../utils/app.error";
 import {AuthRequest} from "../modules/auth/auth.types";
 export const authorize = (...allowedRoles: string[]) => (req: AuthRequest, res: Response, next: NextFunction) => {

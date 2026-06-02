@@ -27,7 +27,6 @@ export const authMiddleware = (
             token,
             env.JWT_SECRET
         ) as AuthUser;
-
         (req as Request & {
             user?: AuthUser;
         }).user = payload;
