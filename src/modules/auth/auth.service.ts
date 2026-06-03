@@ -1,11 +1,11 @@
-import {LoginInput} from "./auth.validation";
+import {LoginInput} from "./auth.schema";
 import {AuthRepository} from "./auth.repository";
 import {AppError} from "../../utils/app.error";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {env} from "../../config/env";
 import {AuthUser} from "./auth.types";
-import {CreateUserInput} from "../user/user.validation";
+import {CreateUserInput} from "../user/user.schema";
 import {RoleRepository} from "../role/role.repository";
 import {UserRepository} from "../user/user.repository";
 import {UserRoleService} from "../user-role/user-role.service";
@@ -20,16 +20,23 @@ export const AuthService = {
         if(!isMatch) {
             throw new AppError('Invalid email or password', 401);
         }
+        const permissions = user.userRole.flatMap(userRole =>
+            userRole.role.rolePermissions.map(
+                rp => rp.permission.name
+            )
+        );
         const roles = user.userRole.map((userRole) => userRole.role.name);
         const payload: AuthUser = {
             userId: user.id,
+            email: user.email,
             roles: roles,
+            permissions,
         }
         const token = jwt.sign(
             payload,
             env.JWT_SECRET!,
             {
-                expiresIn: "1d"
+                expiresIn: "15d"
             }
         );
         return {
@@ -90,10 +97,7 @@ export const AuthService = {
                 phone: data.phone,
             });
 
-        await UserRoleService.assignRole(
-            user.id,
-            customerRole.id
-        );
+        await UserRoleService.assignRole({userId: user.id, roleId: customerRole.id});
 
         return user;
     }

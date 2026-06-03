@@ -15,28 +15,28 @@ router.get(
 router.get(
     '/:id',
     authMiddleware,
-    authorize("ADMIN", "STAFF", "CUSTOMER"),
+    authorize("role:read"),
     getRoleByIdCtrl
 );
 
 router.post(
     '/',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("role:create"),
     createRoleCtrl
 );
 
 router.patch(
     '/:id',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("role:update"),
     updateRoleCtrl
 );
 
 router.delete(
     '/:id',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("role:delete"),
     deleteRoleCtrl
 );
 

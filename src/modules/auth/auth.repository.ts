@@ -1,6 +1,4 @@
 import prisma from "../../config/prisma";
-import {CreateUserInput} from "../user/user.validation";
-import {CreateUserRepositoryInput} from "../user/user.types";
 
 export const AuthRepository = {
     async findByEmail(email: string) {
@@ -9,26 +7,18 @@ export const AuthRepository = {
             include: {
                 userRole: {
                     include: {
-                        role: true
+                        role: {
+                            include: {
+                                rolePermissions: {
+                                    include: {
+                                        permission: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         });
     },
-    async register(
-        data: CreateUserRepositoryInput,
-        customerRoleId: string
-    ) {
-        return prisma.user.create({
-            data: {
-                ...data,
-                userRole: {
-                    create: {
-                        roleId: customerRoleId,
-                    },
-                },
-            },
-        });
-    }
 }

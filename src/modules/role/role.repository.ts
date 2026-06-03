@@ -1,5 +1,5 @@
 import prisma from "../../config/prisma";
-import {CreateRoleInput, RoleIdInput, UpdateRoleInput} from "./role.validation";
+import {CreateRoleInput, UpdateRoleInput} from "./role.schema";
 
 export const RoleRepository = {
     async createRole(data: CreateRoleInput) {
@@ -18,9 +18,13 @@ export const RoleRepository = {
             where: {
                 deletedAt: null,
             },
+            include: {
+                rolePermissions: true,
+            },
             orderBy: {
                 createdAt: "desc",
             },
+
         });
     },
     async findByName(name:string) {
@@ -29,7 +33,13 @@ export const RoleRepository = {
 
     async findById(id: string) {
         return prisma.role.findFirst({
-            where: {id, deletedAt: null},
+            where: {
+                id,
+                deletedAt: null,
+            },
+            include: {
+                rolePermissions: true,
+            }
         })
     },
 

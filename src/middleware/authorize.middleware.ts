@@ -1,8 +1,8 @@
-import { NextFunction, Response ,Request} from "express";
+import { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/app.error";
 
 export const authorize =
-    (...allowedRoles: string[]) =>
+    (...permissions: string[]) =>
         (
             req: Request,
             res: Response,
@@ -14,13 +14,16 @@ export const authorize =
                     401
                 );
             }
+            console.log(req.user);
 
-            const hasRole = req.user.roles.some(
-                role =>
-                    allowedRoles.includes(role)
-            );
+            const hasPermission =
+                permissions.some(permission =>
+                    req.user.permissions.includes(
+                        permission
+                    )
+                );
 
-            if (!hasRole) {
+            if (!hasPermission) {
                 throw new AppError(
                     "Forbidden",
                     403

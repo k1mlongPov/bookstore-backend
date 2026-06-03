@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
-import {loginSchema} from "./auth.validation";
+import {loginSchema} from "./auth.schema";
 import {AuthService} from "./auth.service";
-import {createUserSchema} from "../user/user.validation";
+import {createUserSchema} from "../user/user.schema";
 
 export const loginCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{

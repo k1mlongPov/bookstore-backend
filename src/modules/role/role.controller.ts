@@ -1,6 +1,7 @@
 import {NextFunction,Response, Request} from "express";
-import {createRoleSchema, roleIdSchema, updateRoleSchema} from "./role.validation";
+import {createRoleSchema, updateRoleSchema} from "./role.schema";
 import {RoleService} from "./role.service";
+import {idParamSchema} from "../../shared/validations/common.schema";
 
 export const createRoleCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -32,8 +33,8 @@ export const getAllRolesCtrl = async (req: Request, res: Response, next: NextFun
 
 export const getRoleByIdCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
-        const params = roleIdSchema.parse(req.params);
-        const role = await RoleService.getRoleById(params);
+        const params = idParamSchema.parse(req.params);
+        const role = await RoleService.getRoleById({id: params.id});
         res.status(200).json({
             success: true,
             data: role,
@@ -45,9 +46,9 @@ export const getRoleByIdCtrl = async (req: Request, res: Response, next: NextFun
 
 export const updateRoleCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const params = roleIdSchema.parse(req.params);
+        const params = idParamSchema.parse(req.params);
         const body = updateRoleSchema.parse(req.body);
-        const role = await RoleService.updateRole(params.id, body);
+        const role = await RoleService.updateRole({id: params.id}, body);
         res.status(200).json({
             success: true,
             data: role,
@@ -59,8 +60,8 @@ export const updateRoleCtrl = async (req: Request, res: Response, next: NextFunc
 
 export const deleteRoleCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const params = roleIdSchema.parse(req.params);
-        await RoleService.softDeleteRole(params.id);
+        const params = idParamSchema.parse(req.params);
+        await RoleService.softDeleteRole({id: params.id});
         res.status(200).json({
             success: true,
             message: "Role deleted successfully",

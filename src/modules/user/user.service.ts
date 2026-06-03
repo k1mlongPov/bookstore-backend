@@ -1,14 +1,12 @@
-import {CreateUserInput, GetUsersQueryInput, UpdateUserInput, UserIdInput, userIdSchema} from "./user.validation";
+import {CreateUserInput, UpdateUserInput} from "./user.schema";
 import bcrypt from "bcrypt";
 import {UserRepository} from "./user.repository";
 import {AppError} from "../../utils/app.error";
-import prisma from "../../config/prisma";
-import {PaginationResult} from "../../types/pagination.types";
-import {UserResponse} from "./user.types";
 import {RoleRepository} from "../role/role.repository";
+import {idParamInput} from "../../shared/validations/common.schema";
 
 export const UserService = {
-    async getAllUsers(page:number, limit: number) :Promise<PaginationResult<UserResponse>> {
+    async getAllUsers(page:number, limit: number) {
         const skip = (page - 1) * limit;
         const [users, total] = await Promise.all([
             UserRepository.getAllUsers(skip, limit),
@@ -24,7 +22,7 @@ export const UserService = {
             }
         }
     },
-    async getUserById(data: UserIdInput) {
+    async getUserById(data: idParamInput) {
         const user = await UserRepository.getUserById(data.id);
         if (!user) {
             throw new AppError('User not found!', 404)
@@ -59,8 +57,8 @@ export const UserService = {
             lastName: data.lastName,
         })
     },
-    async updateUser  (id: string, data: UpdateUserInput) {
-        const user = await UserRepository.getUserById(id);
+    async updateUser  (userId: idParamInput, data: UpdateUserInput) {
+        const user = await UserRepository.getUserById(userId.id);
 
         if (!user) {
             throw new AppError('User not found!', 404)
@@ -71,7 +69,7 @@ export const UserService = {
 
             if (
                 existingEmail &&
-                existingEmail.id !== id
+                existingEmail.id !== userId.id
             ) {
                 throw new AppError(
                     "Email already exists",
@@ -85,7 +83,7 @@ export const UserService = {
 
             if (
                 existingUsername &&
-                existingUsername.id !== id
+                existingUsername.id !== userId.id
             ) {
                 throw new AppError(
                     "Username already exists",
@@ -94,13 +92,13 @@ export const UserService = {
             }
         }
         return UserRepository.updateUserById(
-            id,
+            userId.id,
             data,
         );
     },
-    async deleteUser(id: string) {
+    async deleteUser(data: idParamInput) {
         const user =
-            await UserRepository.getUserById(id);
+            await UserRepository.getUserById(data.id);
 
         if (!user) {
             throw new AppError(
@@ -109,6 +107,6 @@ export const UserService = {
             );
         }
 
-        return UserRepository.softDeleteUser(id);
+        return UserRepository.softDeleteUser(data.id);
     }
 }

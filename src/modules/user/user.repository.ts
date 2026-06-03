@@ -1,7 +1,6 @@
 import prisma from "../../config/prisma";
 import {CreateUserRepositoryInput} from "./user.types";
-import {User} from "../../generated/prisma/client";
-import {UpdateUserInput} from "./user.validation";
+import {UpdateUserInput} from "./user.schema";
 
 export const UserRepository = {
     async getAllUsers(skip: number, take: number){
@@ -45,7 +44,6 @@ export const UserRepository = {
                 deletedAt: null
 
             },
-
             select: {
                 id: true,
                 username: true,

@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {assignUserRoleCtrl, getUserRoleCtrl} from "./user-role.controller";
+import {assignUserRoleCtrl, getAllUserRoleCtrl} from "./user-role.controller";
 import {authMiddleware} from "../../middleware/auth.middleware";
 import {authorize} from "../../middleware/authorize.middleware";
 
@@ -7,12 +7,12 @@ const router = Router();
 
 router.get('/',
     authMiddleware,
-    authorize("ADMIN"),
-    getUserRoleCtrl
+    authorize("user-role:read"),
+    getAllUserRoleCtrl
 );
 router.post('/',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("user-role:assign"),
     assignUserRoleCtrl
 );
 

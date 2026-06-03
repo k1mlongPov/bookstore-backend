@@ -1,10 +1,11 @@
 import {Response, Request, NextFunction} from "express";
 import {UserService} from "./user.service";
-import {createUserSchema, getUsersQuerySchema, updateUserSchema, userIdSchema} from "./user.validation";
+import {createUserSchema, updateUserSchema} from "./user.schema";
+import {idParamSchema, paginationSchema} from "../../shared/validations/common.schema";
 
 export const getAllUsersCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const query = getUsersQuerySchema.parse(req.query);
+        const query = paginationSchema.parse(req.query);
         const result = await UserService.getAllUsers(
             query.page,
             query.limit,
@@ -20,7 +21,7 @@ export const getAllUsersCtrl = async (req: Request, res: Response, next: NextFun
 }
 export const getUserByIdCtrl = async(req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
-        const params = userIdSchema.parse(req.params);
+        const params = idParamSchema.parse(req.params);
         const user = await UserService.getUserById({id: params.id});
         res.status(200).json({
             success: true,
@@ -45,9 +46,9 @@ export const createUserCtrl = async (req: Request, res: Response, next: NextFunc
 }
 export const updateUserCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-        const params = userIdSchema.parse(req.params);
-        const body = updateUserSchema.parse(req.body);;
-       const user = await UserService.updateUser(params.id, body);
+        const params = idParamSchema.parse(req.params);
+        const body = updateUserSchema.parse(req.body);
+       const user = await UserService.updateUser({id: params.id}, body);
         res.status(200).json({
             status: "success",
             message: "User updated successfully",
@@ -59,8 +60,8 @@ export const updateUserCtrl = async (req: Request, res: Response, next: NextFunc
 }
 export const deleteUserCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try{
-        const params = userIdSchema.parse(req.params);
-        await UserService.deleteUser(params.id);
+        const params = idParamSchema.parse(req.params);
+        await UserService.deleteUser({id: params.id});
         res.status(204).json();
     }catch (error) {
         next(error);

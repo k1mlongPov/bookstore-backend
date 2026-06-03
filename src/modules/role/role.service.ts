@@ -1,6 +1,7 @@
-import {CreateRoleInput, RoleIdInput, UpdateRoleInput} from "./role.validation";
+import {CreateRoleInput, UpdateRoleInput} from "./role.schema";
 import {RoleRepository} from "./role.repository";
 import {AppError} from "../../utils/app.error";
+import {idParamInput} from "../../shared/validations/common.schema";
 
 export const RoleService = {
     async createRole(data: CreateRoleInput) {
@@ -20,7 +21,7 @@ export const RoleService = {
         return RoleRepository.findAll();
     },
 
-    async getRoleById(data: RoleIdInput) {
+    async getRoleById(data: idParamInput) {
         const role = await RoleRepository.findById(data.id);
         if(!role) {
             throw new AppError('Role not found!', 404);
@@ -28,8 +29,8 @@ export const RoleService = {
         return role;
     },
 
-    async updateRole(id: string,data: UpdateRoleInput) {
-        const role = await RoleRepository.findById(id);
+    async updateRole(roleId: idParamInput,data: UpdateRoleInput) {
+        const role = await RoleRepository.findById(roleId.id);
         if(!role) {
             throw new AppError('Role not found!', 404);
         }
@@ -38,15 +39,15 @@ export const RoleService = {
 
         if(roleName) {
             const existingRole = await RoleRepository.findByName(roleName);
-            if(existingRole && existingRole.id !== id) {
+            if(existingRole && existingRole.id !== roleId.id) {
                 throw new AppError('Role already exists.', 409);
             }
         }
-        return RoleRepository.updateRole(id, {...data, name: roleName});
+        return RoleRepository.updateRole(roleId.id, {...data, name: roleName});
     },
 
-    async softDeleteRole(id: string) {
-        const role = await RoleRepository.findById(id);
+    async softDeleteRole(roleId: idParamInput) {
+        const role = await RoleRepository.findById(roleId.id);
         if(!role) {
             throw new AppError('Role not found!', 404);
         }
@@ -56,7 +57,7 @@ export const RoleService = {
                 400
             );
         }
-        await RoleRepository.softDeleteRole(id);
+        await RoleRepository.softDeleteRole(roleId.id);
 
         return {
             message: 'Role deleted successfully.',

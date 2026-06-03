@@ -5,6 +5,8 @@ import {errorHandler} from "./middleware/error.middleware";
 import roleRoute from "./modules/role/role.route";
 import userRoleRoute from "./modules/user-role/user-role.route";
 import authRoute from "./modules/auth/auth.route";
+import permissionRoute from "./modules/permission/permission.route";
+import rolePermissionRoute from "./modules/role-permission/role-permission.route";
 
 const app: Application = express();
 app.use(express.json());
@@ -12,7 +14,9 @@ app.use(express.json());
 app.use('/user', userRoute);
 app.use('/role', roleRoute);
 app.use('/auth', authRoute);
-app.use('/assign-role', userRoleRoute);
+app.use('/user-role', userRoleRoute);
+app.use('/permission', permissionRoute);
+app.use('/role-permission', rolePermissionRoute);
 
 app.use(errorHandler);
 

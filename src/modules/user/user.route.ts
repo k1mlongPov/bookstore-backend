@@ -8,28 +8,28 @@ const router = Router();
 router.get(
     '/',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("user:read"),
     getAllUsersCtrl
 );
 router.get(
     '/:id',
     authMiddleware,
-    authorize("ADMIN", "STAFF", "CUSTOMER"),
+    authorize("user:read"),
     getUserByIdCtrl
 );
 router.post('/',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("user:create"),
     createUserCtrl
 );
 router.patch('/:id',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("user:update"),
     updateUserCtrl
 );
 router.delete('/:id',
     authMiddleware,
-    authorize("ADMIN"),
+    authorize("user:delete"),
     deleteUserCtrl
 );
 
