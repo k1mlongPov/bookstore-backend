@@ -14,8 +14,6 @@ export const authorize =
                     401
                 );
             }
-            console.log(req.user);
-
             const hasPermission =
                 permissions.some(permission =>
                     req.user.permissions.includes(

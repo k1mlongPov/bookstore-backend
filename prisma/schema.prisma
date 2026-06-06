@@ -100,7 +100,7 @@ model Publisher {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  book      Book[]
+  books     Book[]
 }
 
 model Supplier {
@@ -113,7 +113,7 @@ model Supplier {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
-  book          Book[]
+  books         Book[]
 }
 
 model Book {

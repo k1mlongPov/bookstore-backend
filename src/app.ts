@@ -7,6 +7,7 @@ import userRoleRoute from "./modules/user-role/user-role.route";
 import authRoute from "./modules/auth/auth.route";
 import permissionRoute from "./modules/permission/permission.route";
 import rolePermissionRoute from "./modules/role-permission/role-permission.route";
+import publisherRoute from "./modules/publisher/publisher.route";
 
 const app: Application = express();
 app.use(express.json());
@@ -17,6 +18,7 @@ app.use('/auth', authRoute);
 app.use('/user-role', userRoleRoute);
 app.use('/permission', permissionRoute);
 app.use('/role-permission', rolePermissionRoute);
+app.use('/publisher', publisherRoute);
 
 app.use(errorHandler);
 

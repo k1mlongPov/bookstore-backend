@@ -5,37 +5,34 @@ import {authorize} from "../../middleware/authorize.middleware";
 
 const router = Router();
 
+router.use(authMiddleware);
+
 router.get(
     '/',
-    authMiddleware,
-    authorize("ADMIN"),
+    authorize("role:read"),
     getAllRolesCtrl
 );
 
 router.get(
     '/:id',
-    authMiddleware,
     authorize("role:read"),
     getRoleByIdCtrl
 );
 
 router.post(
     '/',
-    authMiddleware,
     authorize("role:create"),
     createRoleCtrl
 );
 
 router.patch(
     '/:id',
-    authMiddleware,
     authorize("role:update"),
     updateRoleCtrl
 );
 
 router.delete(
     '/:id',
-    authMiddleware,
     authorize("role:delete"),
     deleteRoleCtrl
 );

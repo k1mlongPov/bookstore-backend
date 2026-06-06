@@ -19,8 +19,6 @@ export const RolePermissionService = {
         if(existing) {
             throw new AppError('Role permission already assigned!', 409);
         }
-
         return RolePermissionRepository.assignRolePermission(data);
-
     }
 }

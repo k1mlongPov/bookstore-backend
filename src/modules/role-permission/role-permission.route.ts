@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/",
     authMiddleware,
-    authorize("role:assign"),
+    authorize("role-permission:assign"),
     assignRolePermissionCtrl
 );
 

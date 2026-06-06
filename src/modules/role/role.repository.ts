@@ -19,10 +19,14 @@ export const RoleRepository = {
                 deletedAt: null,
             },
             include: {
-                rolePermissions: true,
+                rolePermissions: {
+                    include: {
+                        permission: true
+                    }
+                },
             },
             orderBy: {
-                createdAt: "desc",
+                createdAt: "asc",
             },
 
         });
