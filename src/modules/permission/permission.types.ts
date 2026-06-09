@@ -9,6 +9,17 @@ export interface CreatePermissionData {
     action: PermissionAction;
 }
 
+export interface UpdatePermissionData {
+    name?: string;
+    resource?: string;
+    action?: PermissionAction;
+}
+
+export interface UpdatePermissionInput {
+    resource?: string;
+    action?: PermissionAction;
+}
+
 export type PermissionAction =
     | "assign"
     | "create"

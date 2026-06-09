@@ -36,7 +36,7 @@ export const AuthService = {
             payload,
             env.JWT_SECRET!,
             {
-                expiresIn: "15d"
+                expiresIn: "1d"
             }
         );
         return {
@@ -45,11 +45,8 @@ export const AuthService = {
     },
 
     async register(data: CreateUserInput) {
-        const existingEmail =
-            await AuthRepository.findByEmail(
-                data.email
-            );
 
+        const existingEmail = await AuthRepository.findByEmail(data.email);
         if (existingEmail) {
             throw new AppError(
                 "Email already exists",

@@ -10,8 +10,7 @@ export const authMiddleware = (
     next: NextFunction
 ) => {
     try {
-        const authHeader =
-            req.headers.authorization;
+        const authHeader = req.headers.authorization;
 
         if (
             !authHeader ||

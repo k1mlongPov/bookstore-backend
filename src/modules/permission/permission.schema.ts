@@ -11,3 +11,5 @@ export const createPermissionSchema = z.object({
         'remove',
     ]),
 });
+
+export const updatePermissionSchema = createPermissionSchema.partial();

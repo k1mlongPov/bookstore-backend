@@ -1,5 +1,5 @@
 import {Request,Response,NextFunction} from "express";
-import {createPermissionSchema} from "./permission.schema";
+import {createPermissionSchema, updatePermissionSchema} from "./permission.schema";
 import {PermissionService} from "./permission.service";
 import {idParamSchema} from "../../shared/validations/common.schema";
 
@@ -38,6 +38,20 @@ export const getAllPermissionsCtrl = async (req: Request, res: Response, next: N
             success: true,
             data: permissions,
         })
+    }catch (e) {
+        next(e);
+    }
+}
+
+export const updatePermissionCtrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const params = idParamSchema.parse(req.params);
+        const body = updatePermissionSchema.parse(req.body);
+
+        const permission = await PermissionService.updatePermission(
+            params,
+            body,
+        );
     }catch (e) {
         next(e);
     }

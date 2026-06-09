@@ -4,7 +4,3 @@ export interface AuthUser {
     roles: string[];
     permissions: string[];
 }
-
-export interface AuthRequest extends Request {
-    user: AuthUser;
-}

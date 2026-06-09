@@ -1,4 +1,4 @@
-import {CreatePermissionData} from "./permission.types";
+import {CreatePermissionData, UpdatePermissionData, UpdatePermissionInput} from "./permission.types";
 import prisma from "../../config/prisma";
 import {idParamInput} from "../../shared/validations/common.schema";
 
@@ -17,5 +17,12 @@ export const PermissionRepository = {
 
     async findAll() {
         return prisma.permission.findMany();
+    },
+
+    async updatePermission(id: idParamInput,data: UpdatePermissionData) {
+        return prisma.permission.update({
+            where: id,
+            data
+        })
     }
 }
