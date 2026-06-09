@@ -74,7 +74,6 @@ model Author {
   updatedAt  DateTime     @updatedAt
   deletedAt  DateTime?
   bookAuthor BookAuthor[]
-  books      Book[]
 }
 
 model Category {
@@ -139,8 +138,6 @@ model Book {
   publisherId     String?
   supplier        Supplier?    @relation(fields: [supplierId], references: [id])
   supplierId      String?
-  author          Author?      @relation(fields: [authorId], references: [id])
-  authorId        String?
   bookAuthor      BookAuthor[]
 }
 
