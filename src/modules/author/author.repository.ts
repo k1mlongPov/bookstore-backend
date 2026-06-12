@@ -17,6 +17,15 @@ export const AuthorRepository = {
             }
         })
     },
+    async findAuthorsByIds(authorIds: string[]) {
+        return prisma.author.findMany({
+            where: {
+                id: {
+                    in: authorIds
+                }
+            }
+        });
+    },
     async findAuthorByIdIncludingDeleted(id: idParamInput) {
         return prisma.author.findUnique({
             where: {

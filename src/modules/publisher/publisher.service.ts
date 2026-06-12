@@ -60,9 +60,9 @@ export const PublisherService ={
         if(!existPublisher) {
             throw new AppError('Publisher not found!', 404);
         }
-        if(data.name) {
+        if (data.name) {
             const existingName = await PublisherRepository.findPublisherByName(data.name);
-            if(existingName && existingName.id !==publisherId.id ) {
+            if (existingName && existingName.id !== publisherId.id) {
                 throw new AppError('Name already exists!', 409);
             }
         }

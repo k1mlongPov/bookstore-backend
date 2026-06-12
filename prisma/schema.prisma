@@ -142,11 +142,11 @@ model Book {
 }
 
 model BookAuthor {
-  id       String  @id @default(uuid())
-  book     Book?   @relation(fields: [bookId], references: [id])
-  bookId   String?
-  author   Author? @relation(fields: [authorId], references: [id])
-  authorId String?
+  id       String @id @default(uuid())
+  book     Book   @relation(fields: [bookId], references: [id])
+  bookId   String
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
 
   @@unique([authorId, bookId])
 }
