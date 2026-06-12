@@ -11,6 +11,7 @@ import publisherRoute from "./modules/publisher/publisher.route";
 import categoryRoute from "./modules/category/category.route";
 import authorRoute from "./modules/author/author.route";
 import bookRoute from "./modules/book/book.route";
+import supplierRoute from "./modules/supplier/supplier.route";
 
 const app: Application = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use('/auth', authRoute);
 app.use('/user-role', userRoleRoute);
 app.use('/permission', permissionRoute);
 app.use('/role-permission', rolePermissionRoute);
+app.use('/supplier', supplierRoute);
 app.use('/publisher', publisherRoute);
 app.use('/category', categoryRoute);
 app.use('/author', authorRoute);
